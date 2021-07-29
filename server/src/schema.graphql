@@ -1,3 +1,13 @@
 type Query {
   appName: String
+
+  allProducts: [Product!]!
+}
+
+type Product {
+  name: String!,
+  description: String!,
+  url: String!,
+  numberOfVotes: Int!,
+  publishedAt: String!,
 }
