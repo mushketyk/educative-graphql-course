@@ -5,6 +5,7 @@ const productsData = [
     url: 'https://educative.io/',
     numberOfVotes: 10,
     publishedAt: '2021-04-05',
+    authorId: '1',
   },
   {
     name: 'Apollo',
@@ -12,6 +13,7 @@ const productsData = [
     url: 'https://www.apollographql.com/',
     numberOfVotes: 5,
     publishedAt: '2021-01-08',
+    authorId: '2',
   },
   {
     name: 'OneGraph',
@@ -19,9 +21,22 @@ const productsData = [
     url: 'https://www.onegraph.com',
     numberOfVotes: 5,
     publishedAt: '2020-08-22',
+    authorId: '1',
   },
 ]
 
+const usersData = [
+  {
+    id: '1',
+    userName: 'ellen',
+    fullName: 'Ellen James'
+  },
+  {
+    id: '2',
+    userName: 'peter',
+    fullName: 'Peter Miles'
+  },
+]
 
 const resolvers = {
   Query: {
@@ -29,6 +44,12 @@ const resolvers = {
 
     allProducts: () => {
       return productsData
+    },
+  },
+
+  Product: {
+    author: (product) => {
+      return usersData.find(user => user.id === product.authorId)
     },
   },
 }
