@@ -66,12 +66,17 @@ const resolvers = {
     allProducts: () => {
       return productsData
     },
+
     productsByAuthor: (_, { authorName }) => {
       const user = usersData.find(user => user.userName === authorName)
       return productsData.filter(product => product.authorId === user.id)
-    }
+    },
 
-    // TODO: Implement new query
+    productsByCategory: (_, { slug }) => {
+      const category = categoriesData.find(category => category.slug === slug)
+
+      return productsData.filter(product => product.categoriesIds.includes(category.id))
+    }
   },
 
   Product: {
@@ -79,7 +84,13 @@ const resolvers = {
       return usersData.find(user => user.id === product.authorId)
     },
 
-    // TODO: Implement categories resolver
+    categories: (product) => {
+      const res =  product.categoriesIds.map(categoryId => {
+        return categoriesData.find(category => category.id === categoryId )
+      })
+
+      return res
+    }
   },
 }
 

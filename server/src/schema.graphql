@@ -4,6 +4,8 @@ type Query {
   allProducts: [Product!]!
 
   productsByAuthor(authorName: String!): [Product!]!
+
+  productsByCategory(slug: String!): [Product!]!
 }
 
 type Product {
@@ -13,10 +15,17 @@ type Product {
   numberOfVotes: Int!,
   publishedAt: String!,
   author: User!,
+  categories: [Category!]!,
 }
 
 type User {
   id: ID!,
   userName: String!,
   fullName: String!,
+}
+
+type Category {
+  id: ID!
+  slug: String!
+  name: String!
 }
