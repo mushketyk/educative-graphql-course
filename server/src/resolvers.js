@@ -2,16 +2,18 @@ const mongoose = require('mongoose')
 
 const Product = require('./models/Product.js')
 const Category = require('./models/Category.js')
+const User = require('./models/User.js')
 
 const resolvers = {
   Query: {
     appName: () => 'ProductHunt clone',
 
-    allProducts: async () => {
+    allProducts: () => {
       return Product.find({})
     },
-    productsByAuthor: (parent, { authorName }) => {
-      // TODO: Implement this method
+    productsByAuthor: async (_, { authorName }) => {
+      const user = await User.findOne({userName: authorName})
+      return Product.find({authorId: user._id})
     },
 
     productsByCategory: async (_, { slug }) => {
@@ -26,15 +28,15 @@ const resolvers = {
       return product.publishedAt.toISOString()
     },
 
-    author: async (product, args) => {
-      // TODO: Implement this method
+    author: async (product) => {
+      return User.findById(product.authorId)
     },
 
     categories: async (product) => {
       const allIds = product.categoriesIds
       return Category.find().where('_id').in(allIds)
     }
-  },
+  }
 }
 
 module.exports = {
