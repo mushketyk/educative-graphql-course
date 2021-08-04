@@ -10,8 +10,11 @@ const resolvers = {
     allProducts: async () => {
       return Product.find({})
     },
+    productsByAuthor: (parent, { authorName }) => {
+      // TODO: Implement this method
+    },
 
-    productsByCategory: async (parent, { slug }) => {
+    productsByCategory: async (_, { slug }) => {
       const category = await Category.findOne({ slug })
       return Product.find({ categoriesIds: category._id })
     }
@@ -21,6 +24,10 @@ const resolvers = {
 
     publishedAt: (product) => {
       return product.publishedAt.toISOString()
+    },
+
+    author: async (product, args) => {
+      // TODO: Implement this method
     },
 
     categories: async (product) => {
