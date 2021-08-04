@@ -4,8 +4,6 @@ type Query {
   allProducts: [Product!]!
 
   productsByAuthor(authorName: String!): [Product!]!
-
-  productsByCategory(slug: String!): [Product!]!
 }
 
 type Product {
