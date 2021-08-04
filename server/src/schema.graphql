@@ -2,6 +2,10 @@ type Query {
   appName: String
 
   allProducts: [Product!]!
+
+  productsByAuthor(authorName: String!): [Product!]!
+
+  productsByCategory(slug: String!): [Product!]!
 }
 
 type Product {

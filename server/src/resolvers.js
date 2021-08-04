@@ -45,6 +45,10 @@ const resolvers = {
     allProducts: () => {
       return productsData
     },
+    productsByAuthor: (_, { authorName }) => {
+      const user = usersData.find(user => user.userName === authorName)
+      return productsData.filter(product => product.authorId === user.id)
+    }
   },
 
   Product: {
