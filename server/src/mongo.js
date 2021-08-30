@@ -11,7 +11,7 @@ db.once('open', function() {
 })
 
 mongoose.set('debug', (collectionName, method, query, doc) => {
-  logger.info(`${collectionName}.${method}, ${JSON.stringify(query)}, ${doc}`)
+  logger.info(`${collectionName}.${method}, ${JSON.stringify(query)}, ${JSON.stringify(doc)}`)
 })
 
 db.on('error', () => {
