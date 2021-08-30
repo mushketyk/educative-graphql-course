@@ -3,9 +3,15 @@ type Query {
 
   allProducts: [Product!]!
 
+  allCategories: [Category!]!
+
   productsByAuthor(authorName: String!): [Product!]!
 
   productsByCategory(slug: String!): [Product!]!
+}
+
+type Mutation {
+  createProduct(input: NewProduct): Product
 }
 
 type Product {
@@ -28,4 +34,11 @@ type Category {
   id: ID!
   slug: String!
   name: String!
+}
+
+input NewProduct {
+  name: String!,
+  description: String!,
+  url: String!,
+  categoriesIds: [ID!]!,
 }

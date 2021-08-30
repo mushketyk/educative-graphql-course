@@ -11,6 +11,11 @@ const resolvers = {
     allProducts: () => {
       return Product.find({})
     },
+
+    allCategories: () => {
+      return Category.find()
+    },
+
     productsByAuthor: async (_, { authorName }) => {
       const user = await User.findOne({userName: authorName})
       return Product.find({authorId: user._id})
@@ -19,6 +24,21 @@ const resolvers = {
     productsByCategory: async (_, { slug }) => {
       const category = await Category.findOne({ slug })
       return Product.find({ categoriesIds: category._id })
+    }
+  },
+
+  Mutation: {
+    createProduct: async(_, { input } ) => {
+      const author = await User.findOne({userName: "ellen"})
+      return Product.create({
+        name: input.name,
+        description: input.description,
+        url: input.url,
+        numberOfVotes: 0,
+        publishedAt: Date.now(),
+        authorId: author._id,
+        categoriesIds: input.categoriesIds,
+       });
     }
   },
 
@@ -37,6 +57,7 @@ const resolvers = {
       return Category.find().where('_id').in(allIds)
     }
   }
+
 }
 
 module.exports = {
