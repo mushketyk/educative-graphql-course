@@ -40,6 +40,8 @@ const resolvers = {
         categoriesIds: input.categoriesIds,
        });
     }
+
+    // TODO: Implement new mutation here
   },
 
   Product: {
