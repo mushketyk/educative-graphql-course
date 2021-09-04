@@ -12,6 +12,8 @@ type Query {
 
 type Mutation {
   createProduct(input: NewProduct): Product
+
+  createCategory(input: NewCategory!): Category!
 }
 
 type Product {
@@ -41,4 +43,9 @@ input NewProduct {
   description: String!,
   url: String!,
   categoriesIds: [ID!]!,
+}
+
+input NewCategory {
+  slug: String!
+  name: String!
 }
