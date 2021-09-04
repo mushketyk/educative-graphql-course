@@ -39,9 +39,14 @@ const resolvers = {
         authorId: author._id,
         categoriesIds: input.categoriesIds,
        });
-    }
+    },
 
-    // TODO: Implement new mutation here
+    createCategory: async(_, { input } ) => {
+      return Category.create({
+        slug: input.slug,
+        name: input.name,
+       });
+    }
   },
 
   Product: {
