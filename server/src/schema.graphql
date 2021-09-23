@@ -17,6 +17,7 @@ type Mutation {
 }
 
 type Product {
+  id: String!,
   name: String!,
   description: String!,
   url: String!,
