@@ -4,7 +4,6 @@ import ProductsList from './ProductsList'
 import allProducts from './test-data'
 
 import {
-
   useParams
 } from 'react-router-dom'
 
