@@ -40,4 +40,11 @@ query($authorName: String!) {
 }
 `
 
-// TODO: Add a query using the "productsByCategory" query
+export const GET_PRODUCTS_IN_CATEGORY = gql`
+${PRODUCTS_FRAGMENT}
+query($categorySlug: String!) {
+    productsByCategory(slug: $categorySlug) {
+    ...ProductsData
+  }
+}
+`

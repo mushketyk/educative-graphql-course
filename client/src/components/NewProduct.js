@@ -1,29 +1,40 @@
 import React from 'react'
-import { Typography } from '@mui/material'
+import { CircularProgress, Typography } from '@mui/material'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import LaunchIcon from '@mui/icons-material/Launch'
 import Autocomplete from '@mui/material/Autocomplete'
 import Chip from '@mui/material/Chip'
+import { useQuery, gql } from '@apollo/client'
+import GraphQLError from './GraphQLError'
 import './NewProduct.css'
 
-const categories =[
-  {
-    id: '1',
-    name: 'Frameworks',
-    slug: 'frameworks'
-  },
-  {
-    id: '2',
-    name: 'API',
-    slug: 'api'
-  },
-]
+const GET_ALL_CATEGORIES = gql`
+  query {
+    allCategories {
+      id
+      slug
+      name
+    }
+  }
+`
 
 function NewProduct() {
 
-  // TODO: Fetch a list of categories using the "useQuery" hook
+  const {
+    data,
+    loading,
+    error,
+    refetch
+  } = useQuery(GET_ALL_CATEGORIES)
 
+  if (error) {
+    return <GraphQLError
+      error={error}
+      refetch={refetch} />
+  }
+
+  const categories = data?.allCategories || []
   return (
     <>
       <Typography variant="h3">Create New Product</Typography>
@@ -51,33 +62,7 @@ function NewProduct() {
           required
           className='formField'
         />
-        {/* TODO: Pass a list of categories here */}
-        <Autocomplete
-          multiple
-          id="size-small-filled-multi"
-          size="medium"
-          options={categories}
-          getOptionLabel={(option) => option.name}
-          defaultValue={[categories[0]]}
-          renderTags={(value, getTagProps) =>
-            value.map((option, index) => (
-              <Chip
-                key={option.id}
-                variant="outlined"
-                label={option.name}
-                size="medium"
-                {...getTagProps({ index })}
-              />
-            ))}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="outlined"
-              className='formField'
-              label="Categories"
-            />
-          )}
-        />
+        {renderAutocomplete(loading, categories)}
       </form>
       <Button
         type="submit"
@@ -89,6 +74,40 @@ function NewProduct() {
       </Button>
     </>
   )
+}
+
+function renderAutocomplete(loading, categories) {
+  if (loading) {
+    return <CircularProgress />
+  }
+
+
+  return <Autocomplete
+    multiple
+    id="size-small-filled-multi"
+    size="medium"
+    options={categories}
+    getOptionLabel={(option) => option.name}
+    defaultValue={[]}
+    renderTags={(value, getTagProps) =>
+      value.map((option, index) => (
+        <Chip
+          key={option.id}
+          variant="outlined"
+          label={option.name}
+          size="medium"
+          {...getTagProps({ index })}
+        />
+      ))}
+    renderInput={(params) => (
+      <TextField
+        {...params}
+        variant="outlined"
+        className='formField'
+        label="Categories"
+      />
+    )}
+  />
 }
 
 export default NewProduct
