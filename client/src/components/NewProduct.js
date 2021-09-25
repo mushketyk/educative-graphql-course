@@ -22,6 +22,8 @@ const categories =[
 
 function NewProduct() {
 
+  // TODO: Fetch a list of categories using the "useQuery" hook
+
   return (
     <>
       <Typography variant="h3">Create New Product</Typography>
@@ -49,6 +51,7 @@ function NewProduct() {
           required
           className='formField'
         />
+        {/* TODO: Pass a list of categories here */}
         <Autocomplete
           multiple
           id="size-small-filled-multi"

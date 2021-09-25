@@ -39,3 +39,5 @@ query($authorName: String!) {
   }
 }
 `
+
+// TODO: Add a query using the "productsByCategory" query

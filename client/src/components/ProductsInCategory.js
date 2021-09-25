@@ -10,6 +10,10 @@ import {
 export default function ProductsInCategory() {
   const { slug } = useParams()
 
+
+  // TODO: Fetch data here using the "useQuery" hook
+
+  // Update a list of properties passed to the "ProductsList"
   return (
     <>
       <Typography variant="h3">Products by in category {slug}</Typography>
