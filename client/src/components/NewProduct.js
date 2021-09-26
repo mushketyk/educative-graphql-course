@@ -8,6 +8,8 @@ import Chip from '@mui/material/Chip'
 import { useQuery, gql } from '@apollo/client'
 import GraphQLError from './GraphQLError'
 import './NewProduct.css'
+import * as yup from 'yup'
+import { useFormik } from 'formik'
 
 const GET_ALL_CATEGORIES = gql`
   query {
@@ -19,6 +21,21 @@ const GET_ALL_CATEGORIES = gql`
   }
 `
 
+const validationSchema = yup.object({
+  name: yup
+    .string('Enter product name')
+    .required('Product name is required'),
+  description: yup
+    .string('Enter product description')
+    .required('Product description is required'),
+  url: yup
+    .string('Enter a valid product URL')
+    .required('Product URL is required'),
+  categoriesIds: yup
+    .array()
+    .min(1)
+})
+
 function NewProduct() {
 
   const {
@@ -27,6 +44,19 @@ function NewProduct() {
     error,
     refetch
   } = useQuery(GET_ALL_CATEGORIES)
+
+  const formik = useFormik({
+    initialValues: {
+      name: '',
+      description: '',
+      url: '',
+      categoriesIds: [],
+    },
+    validationSchema: validationSchema,
+    onSubmit: values => {
+      console.log(JSON.stringify(values, null, 2))
+    },
+  })
 
   if (error) {
     return <GraphQLError
@@ -38,15 +68,23 @@ function NewProduct() {
   return (
     <>
       <Typography variant="h3">Create New Product</Typography>
-      <form noValidate>
+      <form noValidate onSubmit={formik.handleSubmit}>
         <TextField
+          id="name"
+          name="name"
           label="Product name"
           variant="outlined"
           fullWidth
           required
           className='formField'
+          value={formik.values.name}
+          onChange={formik.handleChange}
+          error={formik.touched.name && Boolean(formik.errors.name)}
+          helperText={formik.touched.name && formik.errors.name}
         />
         <TextField
+          id="description"
+          name="description"
           label="Product description"
           variant="outlined"
           fullWidth
@@ -54,41 +92,58 @@ function NewProduct() {
           multiline
           rows={5}
           className='formField'
+          value={formik.values.description}
+          onChange={formik.handleChange}
+          error={formik.touched.description
+            && Boolean(formik.errors.description)}
+          helperText={formik.touched.description && formik.errors.description}
         />
         <TextField
+          id="url"
+          name="url"
           label="URL"
           variant="outlined"
           fullWidth
           required
           className='formField'
+          value={formik.values.url}
+          onChange={formik.handleChange}
+          error={formik.touched.url && Boolean(formik.errors.url)}
+          helperText={formik.touched.url && formik.errors.url}
         />
-        {renderAutocomplete(loading, categories)}
+        {renderAutocomplete(loading, categories, formik)}
+        <Button
+          type="submit"
+          color="primary"
+          variant="contained"
+          endIcon={<LaunchIcon />}
+        >
+          Create
+        </Button>
       </form>
-      <Button
-        type="submit"
-        color="primary"
-        variant="contained"
-        endIcon={<LaunchIcon />}
-      >
-        Create
-      </Button>
     </>
   )
 }
 
-function renderAutocomplete(loading, categories) {
+function renderAutocomplete(loading, categories, formik) {
   if (loading) {
     return <CircularProgress />
   }
 
 
   return <Autocomplete
+    id="categoriesIds"
+    name="categoriesIds"
     multiple
-    id="size-small-filled-multi"
     size="medium"
     options={categories}
     getOptionLabel={(option) => option.name}
     defaultValue={[]}
+    onChange={(e, value) => {
+      console.log(e, value)
+      const categoriesIds = value.map(v => v.id)
+      formik.setFieldValue('categoriesIds', categoriesIds)
+    }}
     renderTags={(value, getTagProps) =>
       value.map((option, index) => (
         <Chip
@@ -105,6 +160,9 @@ function renderAutocomplete(loading, categories) {
         variant="outlined"
         className='formField'
         label="Categories"
+        error={formik.touched.categoriesIds
+          && Boolean(formik.errors.categoriesIds)}
+        helperText={formik.touched.categoriesIds && formik.errors.categoriesIds}
       />
     )}
   />
