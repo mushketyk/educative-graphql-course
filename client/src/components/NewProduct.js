@@ -5,8 +5,9 @@ import Button from '@mui/material/Button'
 import LaunchIcon from '@mui/icons-material/Launch'
 import Autocomplete from '@mui/material/Autocomplete'
 import Chip from '@mui/material/Chip'
-import { useQuery, gql } from '@apollo/client'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import GraphQLError from './GraphQLError'
+import { useHistory } from 'react-router-dom'
 import './NewProduct.css'
 import * as yup from 'yup'
 import { useFormik } from 'formik'
@@ -36,6 +37,29 @@ const validationSchema = yup.object({
     .min(1)
 })
 
+const CREATE_PRODUCT = gql`
+  mutation Mutation($input: NewProduct) {
+    createProduct(input: $input) {
+      id
+      name
+      description
+      url
+      numberOfVotes
+      publishedAt
+      author {
+        id
+        userName
+        fullName
+      }
+      categories {
+        id
+        slug
+        name
+      }
+    }
+  }
+`
+
 function NewProduct() {
 
   const {
@@ -45,6 +69,7 @@ function NewProduct() {
     refetch
   } = useQuery(GET_ALL_CATEGORIES)
 
+
   if (error) {
     return <GraphQLError
       error={error}
@@ -52,6 +77,15 @@ function NewProduct() {
   }
 
 
+  const [
+    mutateFunction,
+    {
+      loading: mutationLoading,
+      error: mutationError
+    }
+  ] = useMutation(CREATE_PRODUCT)
+
+  const history = useHistory()
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -60,8 +94,15 @@ function NewProduct() {
       categoriesIds: [],
     },
     validationSchema: validationSchema,
-    onSubmit: values => {
+    onSubmit: async values => {
       console.log(JSON.stringify(values, null, 2))
+      await mutateFunction({
+        variables: {
+          input: values
+        }
+      })
+
+      history.push('/')
     },
   })
 
@@ -69,6 +110,14 @@ function NewProduct() {
   return (
     <>
       <Typography variant="h3">Create New Product</Typography>
+
+      {mutationError && <Typography
+        variant="body2"
+        style={{color:'#c62828'}}
+        className='formField'>
+        Failed to create a new product
+      </Typography>}
+
       <form noValidate onSubmit={formik.handleSubmit}>
         <TextField
           id="name"
@@ -118,8 +167,10 @@ function NewProduct() {
           color="primary"
           variant="contained"
           endIcon={<LaunchIcon />}
+          disabled={loading}
         >
-          Create
+          {mutationLoading && <CircularProgress size={14} />}
+          {!mutationLoading && 'Create'}
         </Button>
       </form>
     </>
