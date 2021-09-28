@@ -18,6 +18,7 @@ export default function ProductsInCategory() {
     refetch
   } = useQuery(GET_PRODUCTS_IN_CATEGORY, {
     variables: { categorySlug: slug },
+    fetchPolicy: 'network-only'
   })
 
   return (

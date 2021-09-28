@@ -76,7 +76,13 @@ function NewProduct() {
       loading: mutationLoading,
       error: mutationError
     }
-  ] = useMutation(CREATE_PRODUCT)
+  ] = useMutation(
+    CREATE_PRODUCT,
+    {
+      refetchQueries: [
+        'AllProducts',
+      ],
+    })
 
   const history = useHistory()
   const formik = useFormik({
@@ -89,10 +95,10 @@ function NewProduct() {
     validationSchema: validationSchema,
     onSubmit: async values => {
       console.log(JSON.stringify(values, null, 2))
-      await mutateFunction({
+      mutateFunction({
         variables: {
           input: values
-        }
+        },
       })
 
       history.push('/')
