@@ -12,8 +12,11 @@ import {
   Link,
 } from 'react-router-dom'
 
+// TODO: Define mutation to upvote a product
+
 function ProjectCard(props) {
   const {
+    id,
     publishedAt,
     name,
     url,
@@ -22,6 +25,9 @@ function ProjectCard(props) {
     categories,
     numberOfVotes
   } = props.product
+
+  // TODO: Use the "useMutation" hook here
+
   return (
     <Grid item xs={12} md={12}>
       <Paper sx={{ p: 2, margin: 'auto', flexGrow: 1 }}>
@@ -39,13 +45,8 @@ function ProjectCard(props) {
                   href={url}
                   style={{ color: 'inherit'}}
                   rel="noopener">
-                  {/* {name} */}
-                  {/* <Box fontStyle='underline'> */}
                   <Typography variant="h4" component="h2">
-
                     {name}
-
-                    {/* </Box> */}
                   </Typography>
                 </a>
                 <Typography variant="body1" className="description">
@@ -90,7 +91,15 @@ function ProjectCard(props) {
                 alignItems="center"
                 direction="column">
 
-                <IconButton aria-label="vote up">
+                {/* TODO: Disable the button during the mutation */}
+                <IconButton
+                  aria-label="vote up"
+                  onClick={() => {
+                    // TODO: Call a mutation here
+                    console.log(`Upvoting product with ID ${id}`)
+                  }}
+                  disabled={false}
+                >
                   <ArrowUpwardIcon />
                 </IconButton>
                 <Chip
