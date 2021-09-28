@@ -24,7 +24,7 @@ fragment ProductsData on Product {
 
 export const GET_ALL_PRODUCTS = gql`
 ${PRODUCTS_FRAGMENT}
-query {
+query AllProducts {
   allProducts {
     ...ProductsData
   }

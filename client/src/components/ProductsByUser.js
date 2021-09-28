@@ -18,6 +18,7 @@ export default function ProductsByUser() {
     refetch
   } = useQuery(GET_PRODUCTS_BY_AUTHOR, {
     variables: { authorName: userName },
+    fetchPolicy: 'network-only'
   })
 
   return (
