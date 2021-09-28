@@ -11,8 +11,15 @@ import IconButton from '@mui/material/IconButton'
 import {
   Link,
 } from 'react-router-dom'
+import { useMutation, gql } from '@apollo/client'
 
-// TODO: Define mutation to upvote a product
+const UPVOTE_PRODUCT = gql`
+  mutation Mutation($productId: String!) {
+    upvoteProduct(productId: $productId) {
+      numberOfVotes
+    }
+  }
+`
 
 function ProjectCard(props) {
   const {
@@ -26,7 +33,19 @@ function ProjectCard(props) {
     numberOfVotes
   } = props.product
 
-  // TODO: Use the "useMutation" hook here
+  const [
+    mutateFunction,
+    {
+      loading,
+    }
+  ] = useMutation(
+    UPVOTE_PRODUCT,
+    {
+      refetchQueries: [
+        'AllProducts',
+      ],
+    }
+  )
 
   return (
     <Grid item xs={12} md={12}>
@@ -91,14 +110,17 @@ function ProjectCard(props) {
                 alignItems="center"
                 direction="column">
 
-                {/* TODO: Disable the button during the mutation */}
                 <IconButton
                   aria-label="vote up"
                   onClick={() => {
-                    // TODO: Call a mutation here
                     console.log(`Upvoting product with ID ${id}`)
+                    mutateFunction({
+                      variables: {
+                        productId: id,
+                      }
+                    })
                   }}
-                  disabled={false}
+                  disabled={loading}
                 >
                   <ArrowUpwardIcon />
                 </IconButton>
