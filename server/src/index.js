@@ -13,7 +13,7 @@ async function startApp() {
   const typeDefs = readSchema()
   const app = express()
   app.use(cors({
-    origin: ['https://studio.apollographql.com'],
+    origin: ['https://studio.apollographql.com', 'http://localhost:3000'],
     credentials: true,
   }))
   app.use(cookieParser())
