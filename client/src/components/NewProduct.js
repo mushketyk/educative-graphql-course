@@ -102,13 +102,18 @@ function NewProduct() {
     validationSchema: validationSchema,
     onSubmit: async values => {
       console.log(JSON.stringify(values, null, 2))
-      mutateFunction({
-        variables: {
-          input: values
-        },
-      })
+      try {
+        await mutateFunction({
+          variables: {
+            input: values
+          },
+        })
 
-      history.push('/')
+        history.push('/')
+
+      } catch (e) {
+        console.error(e)
+      }
     },
   })
 
