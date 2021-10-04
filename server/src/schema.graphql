@@ -16,6 +16,10 @@ type Mutation {
   upvoteProduct(productId: String!): Product
 
   createCategory(input: NewCategory!): Category!
+
+  login(userName: String!, password: String!): LogInResponse!
+
+  logOut: Boolean!
 }
 
 type Product {
@@ -39,6 +43,11 @@ type Category {
   id: ID!
   slug: String!
   name: String!
+}
+
+type LogInResponse {
+  expiresIn: Int!
+  user: User!
 }
 
 input NewProduct {
