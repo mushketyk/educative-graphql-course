@@ -1,5 +1,9 @@
 const mongoose = require('mongoose')
-const { UserInputError } = require('apollo-server');
+const { UserInputError, AuthenticationError } = require('apollo-server-express');
+const bcrypt = require('bcrypt')
+const logger = require('./logger.js')
+const { JWT_SECRET } = require('./auth.js')
+const jwt = require('jsonwebtoken')
 
 const Product = require('./models/Product.js')
 const Category = require('./models/Category.js')
@@ -32,20 +36,27 @@ const resolvers = {
   },
 
   Mutation: {
-    createProduct: async(_, { input } ) => {
-      const author = await User.findOne({userName: 'ellen'})
+    createProduct: async(_, { input }, {userId} ) => {
+      if (!userId) {
+        throw new AuthenticationError('Authentication required')
+      }
+
       return Product.create({
         name: input.name,
         description: input.description,
         url: input.url,
         numberOfVotes: 0,
         publishedAt: Date.now(),
-        authorId: author._id,
+        authorId: userId,
         categoriesIds: input.categoriesIds,
       })
     },
 
-    upvoteProduct: async(_, { productId } ) => {
+    upvoteProduct: async(_, { productId }, {userId} ) => {
+      if (!userId) {
+        throw new AuthenticationError('Authentication required')
+      }
+
       return Product.findOneAndUpdate(
         {_id: productId},
         {$inc : {'numberOfVotes' : 1}},
@@ -76,6 +87,51 @@ const resolvers = {
         slug: input.slug,
         name: input.name,
       })
+    },
+
+    login: async(_, {userName, password}, context) => {
+      const user = await User.findOne({
+        userName
+      })
+      logger.info(`Context keys: ${Object.keys(context)}`)
+
+      if (!user) {
+        throw new AuthenticationError('Invalid credentials')
+      }
+
+      if (!bcrypt.compare(password, user.passwordHash)) {
+        throw new AuthenticationError('Invalid credentials')
+      }
+
+      const jwtStr = jwt.sign(
+        {
+          userId: user.id
+        },
+        JWT_SECRET,
+        { expiresIn: '1h' }
+      )
+      const expiresIn = 60 * 60 * 1000
+      context.res.cookie('authCookie', jwtStr, {
+        maxAge: expiresIn,
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true
+      })
+
+      return {
+        expiresIn,
+        user,
+      }
+    },
+
+    logOut: async(_, __, { res }) => {
+      res.clearCookie('authCookie', {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true
+      })
+      return true
     }
   },
 
