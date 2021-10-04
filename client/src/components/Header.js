@@ -10,11 +10,16 @@ import AddIcon from '@mui/icons-material/Add'
 import LoginIcon from '@mui/icons-material/Login'
 import HomeIcon from '@mui/icons-material/Home'
 
+import { useAuth } from './AuthContext'
+
 import {
   Link,
 } from 'react-router-dom'
 
 export default function Header() {
+
+  const {isAuthenticated} = useAuth()
+
   return (
     <AppBar position="static">
       <Toolbar>
@@ -36,7 +41,7 @@ export default function Header() {
               >
                 Home
               </Button>
-              <Button
+              {isAuthenticated ? <Button
                 variant="contained"
                 size="medium"
                 startIcon={<AddIcon />}
@@ -44,21 +49,21 @@ export default function Header() {
                 to="/create"
               >
                 Add new product
-              </Button>
+              </Button> : null }
             </ButtonGroup>
 
           </Stack>
         </Box>
 
-        <Button
+        {!isAuthenticated ? <Button
           variant="contained"
           size="medium"
           startIcon={<LoginIcon />}
           component={Link}
-          to="/create"
+          to="/login"
         >
           Login
-        </Button>
+        </Button> : null}
       </Toolbar>
     </AppBar>
   )
