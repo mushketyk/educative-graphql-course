@@ -37,6 +37,7 @@ async function startApp() {
         req,
         res,
         categoriesLoader: categoriesLoader()
+        // TODO: Add usersLoader to the context
       }
     }
   })
