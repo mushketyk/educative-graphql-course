@@ -8,7 +8,7 @@ const { resolvers } = require('./resolvers.js')
 const logger = require('./logger.js')
 const jwt = require('jsonwebtoken')
 const { JWT_SECRET } = require('./auth.js')
-const { categoriesLoader } = require('./dataloaders.js')
+const { categoriesLoader, usersLoader } = require('./dataloaders.js')
 
 async function startApp() {
   const typeDefs = readSchema()
@@ -36,8 +36,8 @@ async function startApp() {
         userId,
         req,
         res,
-        categoriesLoader: categoriesLoader()
-        // TODO: Add usersLoader to the context
+        categoriesLoader: categoriesLoader(),
+        usersLoader: usersLoader(),
       }
     }
   })

@@ -1,5 +1,6 @@
 const DataLoader = require('dataloader')
 const Category = require('./models/Category.js')
+const User = require('./models/User.js')
 
 function categoriesLoader() {
   return new DataLoader(async (categoriesIds) => {
@@ -15,9 +16,17 @@ function categoriesLoader() {
   })
 }
 
-// TODO: Add usersLoader()
+function usersLoader() {
+  return new DataLoader(async (usersIds) => {
+    const users = await User.find().where('_id').in(usersIds)
+    const userForId = Object.fromEntries(
+      users.map(u => [u.id, u])
+    )
+    return usersIds.map(userId => userForId[userId])
+  })
+}
 
 module.exports = {
   categoriesLoader,
-  // TODO: Export usersLoader here
+  usersLoader,
 }
