@@ -15,6 +15,9 @@ function categoriesLoader() {
   })
 }
 
+// TODO: Add usersLoader()
+
 module.exports = {
   categoriesLoader,
+  // TODO: Export usersLoader here
 }

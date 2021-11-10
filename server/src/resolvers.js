@@ -142,6 +142,7 @@ const resolvers = {
     },
 
     author: async (product) => {
+      // TODO: Use usersLoader here
       return User.findById(product.authorId)
     },
 
