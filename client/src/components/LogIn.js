@@ -3,10 +3,7 @@ import { CircularProgress, Typography } from '@mui/material'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import LaunchIcon from '@mui/icons-material/Launch'
-// import Autocomplete from '@mui/material/Autocomplete'
-// import Chip from '@mui/material/Chip'
 import { useMutation, gql } from '@apollo/client'
-// import GraphQLError from './GraphQLError'
 import { useHistory } from 'react-router-dom'
 import './LogIn.css'
 import * as yup from 'yup'
@@ -119,7 +116,7 @@ function LogIn() {
           disabled={loading}
         >
           {loading && <CircularProgress size={14} />}
-          {!loading && 'Create'}
+          {!loading && 'Login'}
         </Button>
       </form>
     </>

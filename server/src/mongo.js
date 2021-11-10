@@ -10,8 +10,8 @@ db.once('open', function() {
   logger.info('Connected to a DB')
 })
 
-mongoose.set('debug', (collectionName, method, query, doc) => {
-  logger.info(`${collectionName}.${method}, ${JSON.stringify(query)}, ${JSON.stringify(doc)}`)
+mongoose.set('debug', (collectionName, method, query) => {
+  logger.info(`${collectionName}.${method}, ${JSON.stringify(query)}`)
 })
 
 db.on('error', () => {
