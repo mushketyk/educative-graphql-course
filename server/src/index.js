@@ -8,6 +8,7 @@ const { resolvers } = require('./resolvers.js')
 const logger = require('./logger.js')
 const jwt = require('jsonwebtoken')
 const { JWT_SECRET } = require('./auth.js')
+const { categoriesLoader } = require('./dataloaders.js')
 
 async function startApp() {
   const typeDefs = readSchema()
@@ -34,7 +35,8 @@ async function startApp() {
       return {
         userId,
         req,
-        res
+        res,
+        categoriesLoader: categoriesLoader()
       }
     }
   })
@@ -42,9 +44,7 @@ async function startApp() {
   await server.start()
   server.applyMiddleware({ app, cors: false })
 
-  app.listen({ port: 4000 }, () => {
-    logger.info('Listening on port 4000')
-  })
+  app.listen({ port: 4000 })
 }
 
 startApp().then(() => {

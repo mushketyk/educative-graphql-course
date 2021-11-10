@@ -14,7 +14,7 @@ const resolvers = {
     appName: () => 'ProductHunt clone',
 
     allProducts: () => {
-      return Product.find({})
+      return Product.find({}).exec()
     },
 
     allCategories: () => {
@@ -145,9 +145,9 @@ const resolvers = {
       return User.findById(product.authorId)
     },
 
-    categories: async (product) => {
+    categories: async (product, _, { categoriesLoader }) => {
       const allIds = product.categoriesIds
-      return Category.find().where('_id').in(allIds)
+      return categoriesLoader.loadMany(allIds)
     }
   }
 
