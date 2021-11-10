@@ -141,9 +141,9 @@ const resolvers = {
       return product.publishedAt.toISOString()
     },
 
-    author: async (product) => {
+    author: async (product, _, { usersLoader }) => {
       // TODO: Use usersLoader here
-      return User.findById(product.authorId)
+      return usersLoader.load(product.authorId)
     },
 
     categories: async (product, _, { categoriesLoader }) => {
