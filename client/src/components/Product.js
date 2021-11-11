@@ -12,7 +12,6 @@ import {
   Link,
 } from 'react-router-dom'
 import { useMutation, gql } from '@apollo/client'
-// import { PRODUCTS_FRAGMENT } from './queries'
 
 const UPVOTE_PRODUCT = gql`
   mutation Mutation($productId: String!) {
@@ -41,7 +40,16 @@ function ProjectCard(props) {
       loading,
     }
   ] = useMutation(
-    UPVOTE_PRODUCT
+    UPVOTE_PRODUCT,
+    {
+      optimisticResponse: {
+        upvoteProduct: {
+          id,
+          numberOfVotes: numberOfVotes + 1,
+          __typename: 'Product'
+        }
+      }
+    }
   )
 
   return (
