@@ -11,6 +11,7 @@ import { useHistory } from 'react-router-dom'
 import './NewProduct.css'
 import * as yup from 'yup'
 import { useFormik } from 'formik'
+import { PRODUCTS_FRAGMENT } from './queries'
 
 const GET_ALL_CATEGORIES = gql`
   query {
@@ -38,24 +39,10 @@ const validationSchema = yup.object({
 })
 
 const CREATE_PRODUCT = gql`
+  ${PRODUCTS_FRAGMENT}
   mutation Mutation($input: NewProduct) {
     createProduct(input: $input) {
-      id
-      name
-      description
-      url
-      numberOfVotes
-      publishedAt
-      author {
-        id
-        userName
-        fullName
-      }
-      categories {
-        id
-        slug
-        name
-      }
+      ...ProductsData
     }
   }
 `
@@ -85,12 +72,18 @@ function NewProduct() {
     }
   ] = useMutation(
     CREATE_PRODUCT,
-    // TODO: Replace "refetchQuery" with an update function
     {
-      refetchQueries: [
-        'AllProducts',
-      ],
-    })
+      update(cache, { data: { createProduct } }) {
+        cache.modify({
+          fields: {
+            allProducts(existingProducts = []) {
+              return [...existingProducts, createProduct]
+            },
+          },
+        })
+      }
+    }
+  )
 
   const history = useHistory()
   const formik = useFormik({
