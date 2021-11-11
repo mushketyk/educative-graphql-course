@@ -85,6 +85,7 @@ function NewProduct() {
     }
   ] = useMutation(
     CREATE_PRODUCT,
+    // TODO: Replace "refetchQuery" with an update function
     {
       refetchQueries: [
         'AllProducts',
