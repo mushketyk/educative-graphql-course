@@ -31,6 +31,15 @@ query AllProducts {
 }
 `
 
+export const PRODUCTS_PAGINATION = gql`
+${PRODUCTS_FRAGMENT}
+query Products($skip: Int!, $limit: Int!) {
+  products(skip: $skip, limit: $limit) {
+    ...ProductsData
+  }
+}
+`
+
 export const GET_PRODUCTS_BY_AUTHOR = gql`
 ${PRODUCTS_FRAGMENT}
 query($authorName: String!) {
