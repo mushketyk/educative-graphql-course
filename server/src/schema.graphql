@@ -3,6 +3,8 @@ type Query {
 
   allProducts: [Product!]!
 
+  products(skip: Int!, limit: Int!): [Product!]!
+
   allCategories: [Category!]!
 
   productsByAuthor(authorName: String!): [Product!]!

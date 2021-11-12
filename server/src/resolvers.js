@@ -17,6 +17,20 @@ const resolvers = {
       return Product.find({}).exec()
     },
 
+    products: (_, {skip, limit}) => {
+      if (skip < 0 || limit <= 0) {
+        throw new UserInputError('Invalid skip/limit arguments')
+      }
+      if (limit > 10) {
+        throw new UserInputError('Cannot return so many products')
+      }
+      return Product.find({})
+        .sort({publishedAt: -1})
+        .skip(skip)
+        .limit(limit)
+        .exec()
+    },
+
     allCategories: () => {
       return Category.find()
     },
