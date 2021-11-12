@@ -17,7 +17,25 @@ const link = createHttpLink({
 })
 
 const client = new ApolloClient({
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          products: {
+            keyArgs: false,
+            merge: (existing = [], incoming, { args: { skip = 0 }}) => {
+
+              const merged = [...existing]
+              incoming.forEach((element, index) => {
+                merged[skip + index] = element
+              })
+              return merged
+            },
+          }
+        }
+      }
+    }
+  }),
   link,
 })
 
