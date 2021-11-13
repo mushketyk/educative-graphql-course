@@ -24,7 +24,6 @@ const client = new ApolloClient({
           products: {
             keyArgs: false,
             merge: (existing = [], incoming, { args: { skip = 0 }}) => {
-
               const merged = [...existing]
               incoming.forEach((element, index) => {
                 merged[skip + index] = element
