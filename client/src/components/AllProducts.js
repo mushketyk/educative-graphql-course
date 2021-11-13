@@ -39,7 +39,7 @@ export default function AllProducts() {
       >
         <Button
           variant="contained"
-          disabled={loading || error}
+          disabled={!!(loading || error)}
           onClick={() => {
             fetchMore({
               variables: {
